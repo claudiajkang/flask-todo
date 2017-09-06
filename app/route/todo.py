@@ -27,3 +27,13 @@ def todo_update(todo_id):
     db.session.commit()
 
     return redirect(url_for('todo_index'))
+
+
+@app.route('/todo/<todo_id>/delete', methods=['POST'])
+def todo_delete(todo_id):
+    delete_todo = TodoModel.query.filter_by(id=todo_id).one()
+
+    db.session.delete(delete_todo)
+    db.session.commit()
+
+    return redirect(url_for('todo_index'))

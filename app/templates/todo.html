@@ -8,12 +8,27 @@
 
 <ul id="myUL">
     {% for todo in todos %}
-        <li onclick="todoUpdate({{ todo.id }})" {% if todo.done != 0 %} class="checked" {% endif %}>
-            {{ todo.title }}</li>
+        <li {% if todo.done != 0 %} class="checked" {% endif %}>
+            <input type="checkbox"
+                   onclick="todoUpdate({{ todo.id }})"
+                   value="{{ todo.title }}"
+                    {% if todo.done %} checked {% endif %}>
+            {{ todo.title }}
+            <button id="delBtn" onclick="todoDelete({{ todo.id }})" value="X">X</button>
+        </li>
     {% endfor %}
 </ul>
 
 <script>
+    function checked(chkbox) {
+        if (chkbox.checked == true) {
+            alert("선택");
+        }
+        else {
+            alert("선택 해제");
+        }
+    }
+
     function todoUpdate(id) {
         var form = document.createElement("form");
         form.setAttribute("charset", "UTF=8");
@@ -29,8 +44,24 @@
         document.body.appendChild(form);
 
         form.submit();
+    }
 
-        console.log(id)
+
+    function todoDelete(id) {
+        var form = document.createElement("form");
+        form.setAttribute("charset", "UTF=8");
+        form.setAttribute("method", "post");
+        form.setAttribute("action", "/todo/" + id + "/delete");
+
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type", "hidden");
+        hiddenField.setAttribute("id", id);
+        hiddenField.setAttribute("value", id);
+        form.appendChild(hiddenField);
+
+        document.body.appendChild(form);
+
+        form.submit();
     }
 </script>
 
@@ -122,7 +153,7 @@
     }
 
     /* Style the input */
-    input {
+    .header input {
         border: none;
         width: 75%;
         padding: 10px;
@@ -131,7 +162,7 @@
     }
 
     /* Style the "Add" button */
-    .addBtn {
+    .header .addBtn {
         padding: 10px;
         width: 25%;
         background: #d9d9d9;
@@ -145,5 +176,9 @@
 
     .addBtn:hover {
         background-color: #bbb;
+    }
+
+    #myUL #delBtn {
+        float: right;
     }
 </style>
