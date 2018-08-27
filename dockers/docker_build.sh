@@ -13,4 +13,5 @@ docker build --tag ${BUILD_PROJ} \
 ${PROJ_PATH}
 
 docker run --name ${PROJ} \
+-p 5555:5555 \
 -d ${BUILD_PROJ}

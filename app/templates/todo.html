@@ -2,111 +2,81 @@
 
 {% block body %}
 
-    <body>
+  <body>
+  <!-- https://www.w3schools.com/howto/howto_js_todolist.asp -->
 
-    <div class="ui middle aligned center aligned grid">
-        <div class="column">
-            <h2 class="ui red header">
-                <div class="content">
-                    My To Do List
-                </div>
-            </h2>
 
-            <form class="ui large form" action="{{ request.path }}" method="post">
-                <div class="ui stacked segment">
-                    <div class="field">
-                        <div class="ui input">
-                            <input type="text" name="title" placeholder="Title...">
-                        </div>
-                        <button class="ui fluid large red button">Add</button>
-                    </div>
-                </div>
-            </form>
+  <div id="myDIV" class="header">
+    <h2>My To Do List</h2>
+    <input type="text" id="myInput" placeholder="Title...">
+    <span onclick="newElement()" class="addBtn">Add</span>
+  </div>
 
-            <div class="ui message">
-                <div class="ui large aligned divided list">
-                    <div class="item">
-                        <div class="content" id="todo_list">
-                            {% for todo in todos %}
-                                <li {% if todo.done != 0 %} class="checked" {% endif %}>
-                                    <input type="checkbox"
-                                           onclick="todoUpdate({{ todo.id }})"
-                                           value="{{ todo.title }}"
-                                            {% if todo.done %} checked {% endif %}>
-                                    {{ todo.title }}
-                                    <i class="remove circle outline icon" onclick="todoDelete({{ todo.id }})"></i>
-                                </li>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <ul id="myUL">
+    <li>Hit the gym</li>
+    <li class="checked">Pay bills</li>
+    <li>Meet George</li>
+    <li>Buy eggs</li>
+    <li>Read a book</li>
+    <li>Organize office</li>
+  </ul>
 
-    <script>
-        function checked(chkbox) {
-            if (chkbox.checked == true) {
-                alert("선택");
-            }
-            else {
-                alert("선택 해제");
-            }
+  <script>
+    // Create a "close" button and append it to each list item
+    var myNodelist = document.getElementsByTagName("LI");
+    var i;
+    for (i = 0; i < myNodelist.length; i++) {
+      var span = document.createElement("SPAN");
+      var txt = document.createTextNode("\u00D7");
+      span.className = "close";
+      span.appendChild(txt);
+      myNodelist[i].appendChild(span);
+    }
+
+    // Click on a close button to hide the current list item
+    var close = document.getElementsByClassName("close");
+    var i;
+    for (i = 0; i < close.length; i++) {
+      close[i].onclick = function() {
+        var div = this.parentElement;
+        div.style.display = "none";
+      }
+    }
+
+    // Add a "checked" symbol when clicking on a list item
+    var list = document.querySelector('ul');
+    list.addEventListener('click', function(ev) {
+      if (ev.target.tagName === 'LI') {
+        ev.target.classList.toggle('checked');
+      }
+    }, false);
+
+    // Create a new list item when clicking on the "Add" button
+    function newElement() {
+      var li = document.createElement("li");
+      var inputValue = document.getElementById("myInput").value;
+      var t = document.createTextNode(inputValue);
+      li.appendChild(t);
+      if (inputValue === '') {
+        alert("You must write something!");
+      } else {
+        document.getElementById("myUL").appendChild(li);
+      }
+      document.getElementById("myInput").value = "";
+
+      var span = document.createElement("SPAN");
+      var txt = document.createTextNode("\u00D7");
+      span.className = "close";
+      span.appendChild(txt);
+      li.appendChild(span);
+
+      for (i = 0; i < close.length; i++) {
+        close[i].onclick = function() {
+          var div = this.parentElement;
+          div.style.display = "none";
         }
+      }
+    }
+  </script>
 
-        function todoUpdate(id) {
-            var form = document.createElement("form");
-            form.setAttribute("charset", "UTF=8");
-            form.setAttribute("method", "post");
-            form.setAttribute("action", "/todo/" + id + "/update");
-
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("id", id);
-            hiddenField.setAttribute("value", id);
-            form.appendChild(hiddenField);
-
-            document.body.appendChild(form);
-
-            form.submit();
-        }
-
-
-        function todoDelete(id) {
-            var form = document.createElement("form");
-            form.setAttribute("charset", "UTF=8");
-            form.setAttribute("method", "post");
-            form.setAttribute("action", "/todo/" + id + "/delete");
-
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("id", id);
-            hiddenField.setAttribute("value", id);
-            form.appendChild(hiddenField);
-
-            document.body.appendChild(form);
-
-            form.submit();
-        }
-    </script>
-
-    <style>
-        #todo_list li.checked {
-            background: #888;
-            color: #fff;
-            text-decoration: line-through;
-        }
-
-        #todo_list li.checked::before {
-            position: absolute;
-            border-color: #fff;
-            border-style: solid;
-            border-width: 0 2px 2px 0;
-            top: 10px;
-            left: 16px;
-            transform: rotate(45deg);
-            height: 15px;
-            width: 7px;
-        }
-    </style>
 {% endblock %}
