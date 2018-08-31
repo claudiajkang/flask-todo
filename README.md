@@ -2,6 +2,16 @@
 
 #### Prepare
 1. Install docker.
+```sh
+# doker install 
+curl -fsSL https://get.docker.com/ | sudo sh
+
+sudo usermod -aG docker $USER
+
+# docker start/enable daemon
+sudo systemctl enable docker
+sudo systemctl restart docker
+```
 
 #### Installation
 ```bash
